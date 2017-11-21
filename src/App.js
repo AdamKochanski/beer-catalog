@@ -4,11 +4,8 @@ import axios from 'axios';
 import Infinite from 'react-infinite';
 import Modal from 'react-modal';
 
-
-
 const beersApi = resources => 
   `https://api.punkapi.com/v2/beers${resources}`
-
 
 //modal configuration
 const customStyles = {
@@ -32,6 +29,7 @@ class App extends Component {
     this.state = {
       beers: [],
       beerMods: [],
+      beerModsMini:[],
       modalIsOpen: false
     };
 
@@ -44,7 +42,7 @@ class App extends Component {
     axios.get(beersApi('?page=1&per_page=20'))
       .then(res => {
         const beers = res.data;
-        console.log(beers);
+        // console.log('all beers:', beers);
         this.setState({ beers });
       })
       .catch(function (error) {
@@ -58,7 +56,7 @@ class App extends Component {
     axios.get(beersApi('/'+idx))
       .then(res => {
         const beerMods = res.data;
-        console.log('beerMods lookup:', beerMods);
+        // console.log('beerMods lookup:', beerMods);
         this.setState({ beerMods });
       })
       .catch(function (error) {
@@ -68,7 +66,17 @@ class App extends Component {
 
   afterOpenModal() {
     // references are now sync'd and can be accessed.
-    this.subtitle.style.color = '#f00';
+      this.subtitle.style.display = 'none';
+
+    axios.get(beersApi('?ibu_gt=40&ibu_lt=45&per_page=3'))
+      .then(res => {
+        const beerModsMini = res.data;
+        console.log('IBU ABV EBC lookup:', beerModsMini);
+        this.setState({ beerModsMini });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   closeModal() {
@@ -104,6 +112,8 @@ class App extends Component {
           style={customStyles}
           contentLabel="BeerModal">
 
+          <div ref={subtitle => this.subtitle = subtitle}>Loading...</div>
+
           {this.state.beerMods.map(beerMod =>
             <div key={beerMod.id} className="modal">
               <img src={beerMod.image_url} alt={beerMod.name}/>
@@ -121,17 +131,19 @@ class App extends Component {
               </div>
             </div>
           )}
-            
-          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
-          <button onClick={this.closeModal}>close</button>
-          <div>I am a modal</div>
-          <form>
-            <input />
-            <button>tab navigation</button>
-            <button>stays</button>
-            <button>inside</button>
-            <button>the modal</button>
-          </form>
+          
+          <div className="additional">You might also like:</div>
+
+          <div className="miniPrev">
+          {this.state.beerModsMini.map(beerModM =>
+            <div key={beerModM.id} >
+              <img src={beerModM.image_url} alt={beerModM.name}/>
+              <p>{beerModM.name}</p>
+            </div>
+          )}
+          </div>
+          
+          {/*<button onClick={this.closeModal}>close</button>  //We will need this on mobile */}
         </Modal>  
       </div>
     );
