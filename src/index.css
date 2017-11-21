@@ -1,5 +1,127 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  background: #f8f8f8;
+  font-family: 'Lato', sans-serif;
+}
+
+.header {
+  margin: 50px;
+}
+
+.header .title-pre {
+  color: #FDC22A;
+}
+
+.header .title-post {
+  color: #737373;
+}
+
+.wrapper {
+  display: grid;
+  margin: 50px;
+  grid-template-columns: 1fr;
+  grid-gap: 50px;
+  grid-template-rows: 1fr 1fr;
+  justify-content: center;
+  text-align: center;
+}
+
+.wrapper .card {
+  display: block;
+  background: white;
+  height: 300px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+  transition: all .2s ease-in-out;
+}
+
+.wrapper .card:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+}
+
+.wrapper .card img {
+  display: block;
+  margin: 15px auto;
+  max-width: 100%;
+  height: 200px;
+}
+
+.wrapper .beer-name{
+  font-weight: bold;
+  color: #FDC22A;
+  font-size: 16px;
+  margin: 8px;
+}
+.wrapper .beer-tagline{
+  color: #737373;
+  font-size: 12px;
+  margin: 8px;
+}
+
+.modal {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  margin: 20px;
+  height: 500px;
+  max-width: 500px;
+  color: #737373;
+}
+
+.modal img {
+  height: 300px;
+  width: auto;
+  
+}
+
+.modal .details .name{
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.modal .details .tagline{
+  font-size: 14px;
+}
+
+.modal .details .underline{
+  width: 50px;
+  height: 5px;
+  background: #FDC22A;
+  display: block;
+}
+
+.modal .details .ranks{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.modal .details .ranks span{
+  font-weight: 900;
+  margin-left: 20px;
+}
+
+.modal .details .ranks span:first-child{
+  margin-left: 0;
+}
+
+
+@media only screen and (min-width: 768px) {
+  .wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .wrapper .beer-name{
+    font-weight: bold;
+    color: #FDC22A;
+  }
+  .wrapper .beer-tagline{
+    color: #737373;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+    .wrapper {
+      grid-template-columns: repeat(4, 1fr);
+  }
 }
