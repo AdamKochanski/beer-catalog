@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
-import Infinite from 'react-infinite';
 import Modal from 'react-modal';
+import Visit from 'react-visit';
 
 const beersApi = resources => 
   `https://api.punkapi.com/v2/beers${resources}`
+
+let page = 1;
 
 //modal configuration
 const customStyles = {
@@ -17,10 +19,19 @@ const customStyles = {
     left             : '50%',
     right            : 'auto',
     bottom           : 'auto',
+    padding          : '30px',
     marginRight      : '-50%',
     transform        : 'translate(-50%, -50%)'
   }
 };
+
+const visitStyle = {
+  position: 'absolute',
+  visibility: 'hidden',
+  width: '100%',
+  marginTop: '-10rem',
+  height: '10rem'
+}
 
 class App extends Component {
   constructor(props) {
@@ -71,7 +82,7 @@ class App extends Component {
     axios.get(beersApi('?ibu_gt=40&ibu_lt=45&per_page=3'))
       .then(res => {
         const beerModsMini = res.data;
-        console.log('IBU ABV EBC lookup:', beerModsMini);
+        //console.log('IBU ABV EBC lookup:', beerModsMini);
         this.setState({ beerModsMini });
       })
       .catch(function (error) {
@@ -83,6 +94,20 @@ class App extends Component {
     this.setState({modalIsOpen: false});
   }
 
+  handleVisit () {
+    //console.log('next page.')
+    page++; //add next page
+    axios.get(beersApi('?page='+page+'&per_page=20'))
+      .then(res => {
+        const beersNext = res.data;
+        // console.log('all beers:', beersNext);
+        this.setState({ beers: this.state.beers.concat(beersNext) });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -92,19 +117,16 @@ class App extends Component {
             <span className="title-post">GURU</span>
           </h1>
         </header>
-      {/*  */}
-        
-          <main className="wrapper">
-            {this.state.beers.map(beer =>
-              <article key={beer.id} id={beer.id} className="card" onClick={this.openModal.bind(this, beer.id)}>
-                  <img src={beer.image_url} alt={beer.name}/>
-                  <h3 className="beer-name">{beer.name}</h3>
-                  <p className="beer-tagline">{beer.tagline}</p>
-              </article>
-            )}
-          </main>
-        <Infinite containerHeight={400} elementHeight={400} useWindowAsScrollContainer>
-        </Infinite>
+        <main className="wrapper">
+          {this.state.beers.map(beer =>
+            <article key={beer.id} id={beer.id} className="card" onClick={this.openModal.bind(this, beer.id)}>
+                <img src={beer.image_url} alt={beer.name}/>
+                <h3 className="beer-name">{beer.name}</h3>
+                <p className="beer-tagline">{beer.tagline}</p>
+            </article>
+          )}
+        </main>
+        <Visit visitStyle={visitStyle} onVisit={ () => this.handleVisit() } />
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -131,7 +153,7 @@ class App extends Component {
               </div>
             </div>
           )}
-          
+
           <div className="additional">You might also like:</div>
 
           <div className="miniPrev">
