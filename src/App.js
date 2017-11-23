@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
+import bglImg from'./bgl.png';
 import axios from 'axios';
 import Modal from 'react-modal';
 import Visit from 'react-visit';
+import ProgressiveImage from "react-progressive-image-loading";
 
 const beersApi = resources => 
   `https://api.punkapi.com/v2/beers${resources}`
@@ -41,6 +43,7 @@ class App extends Component {
       beers: [],
       beerMods: [],
       beerModsMini:[],
+      beersEndList: false,
       modalIsOpen: false
     };
 
@@ -95,13 +98,15 @@ class App extends Component {
   }
 
   handleVisit () {
-    //console.log('next page.')
-    page++; //add next page
+    // console.log('next page.')
+    page++; // add next page
     axios.get(beersApi('?page='+page+'&per_page=20'))
       .then(res => {
         const beersNext = res.data;
         // console.log('all beers:', beersNext);
         this.setState({ beers: this.state.beers.concat(beersNext) });
+        // when all beers showed
+        beersNext.length === 0 && this.setState({ beersEndList: true });;
       })
       .catch(function (error) {
         console.log(error);
@@ -120,12 +125,18 @@ class App extends Component {
         <main className="wrapper">
           {this.state.beers.map(beer =>
             <article key={beer.id} id={beer.id} className="card" onClick={this.openModal.bind(this, beer.id)}>
-                <img src={beer.image_url} alt={beer.name}/>
+                { /*<img src={beer.image_url} alt={beer.name}/>*/} 
+                <ProgressiveImage
+                    preview={bglImg}
+                    src={beer.image_url}
+                    render={(src, style) => <img src={src} style={style} />}
+                />
                 <h3 className="beer-name">{beer.name}</h3>
                 <p className="beer-tagline">{beer.tagline}</p>
             </article>
           )}
         </main>
+        <div className="end-list">{ this.state.beersEndList ? 'This is THE END :)' : 'Loading...' }</div>
         <Visit visitStyle={visitStyle} onVisit={ () => this.handleVisit() } />
         <Modal
           isOpen={this.state.modalIsOpen}

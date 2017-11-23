@@ -132,6 +132,14 @@ body {
   height: 120px;
 }
 
+.end-list {
+  padding-bottom: 50px;
+  color: #FDC22A;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
 @media only screen and (min-width: 768px) {
   .wrapper {
     grid-template-columns: repeat(2, 1fr);
