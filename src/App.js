@@ -6,12 +6,14 @@ import Modal from 'react-modal';
 import Visit from 'react-visit';
 import ProgressiveImage from "react-progressive-image-loading";
 
+// api endpoint
 const beersApi = resources => 
   `https://api.punkapi.com/v2/beers${resources}`
 
+// pagination
 let page = 1;
 
-//modal configuration
+// modal configuration
 const customStyles = {
   overlay : {
     backgroundColor  : 'rgba(0, 0, 0, 0.75)'
@@ -27,6 +29,7 @@ const customStyles = {
   }
 };
 
+// pagination iginte container
 const visitStyle = {
   position: 'absolute',
   visibility: 'hidden',
@@ -53,15 +56,17 @@ class App extends Component {
   }
 
   componentDidMount() {
+
+    // initial modal
+    let initModal = window.location.pathname.split( '/' )[2];
+    initModal && this.openModal(initModal);
+
     axios.get(beersApi('?page=1&per_page=20'))
       .then(res => {
         const beers = res.data;
         // console.log('all beers:', beers);
         this.setState({ beers });
       })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
 
   openModal(idx, e) {
@@ -73,9 +78,9 @@ class App extends Component {
         // console.log('beerMods lookup:', beerMods);
         this.setState({ beerMods });
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+
+    //set history state
+    window.history.pushState({}, null, '/details/'+idx);
   }
 
   afterOpenModal() {
@@ -88,13 +93,13 @@ class App extends Component {
         //console.log('IBU ABV EBC lookup:', beerModsMini);
         this.setState({ beerModsMini });
       })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
 
   closeModal() {
     this.setState({modalIsOpen: false});
+
+    //set history state
+    window.history.pushState({}, null, '/');
   }
 
   handleVisit () {
@@ -108,9 +113,6 @@ class App extends Component {
         // when all beers showed
         beersNext.length === 0 && this.setState({ beersEndList: true });;
       })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
 
   render() {
@@ -125,11 +127,11 @@ class App extends Component {
         <main className="wrapper">
           {this.state.beers.map(beer =>
             <article key={beer.id} id={beer.id} className="card" onClick={this.openModal.bind(this, beer.id)}>
-                { /*<img src={beer.image_url} alt={beer.name}/>*/} 
+                { /*<img src={beer.image_url} alt={beer.name}/> //img without progressive rendering*/} 
                 <ProgressiveImage
                     preview={bglImg}
                     src={beer.image_url}
-                    render={(src, style) => <img src={src} style={style} />}
+                    render={(src, style) => <img src={src} style={style} alt={beer.name}/>}
                 />
                 <h3 className="beer-name">{beer.name}</h3>
                 <p className="beer-tagline">{beer.tagline}</p>
