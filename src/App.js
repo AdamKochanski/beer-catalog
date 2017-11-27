@@ -25,7 +25,7 @@ const customStyles = {
     bottom           : 'auto',
     padding          : '30px',
     marginRight      : '-50%',
-    transform        : 'translate(-50%, -50%)'
+    transform        : 'translate(-50%, -50%)',
   }
 };
 
@@ -85,10 +85,10 @@ class App extends Component {
     window.history.pushState({}, null, '/details/'+idx);
   }
 
-  afterOpenModal() {
+  afterOpenModal(idx) {
     // references are now sync'd and can be accessed.
       this.subtitle.style.display = 'none';
-
+    // @TODO dynamic search 
     axios.get(beersApi('?ibu_gt=40&ibu_lt=45&per_page=3'))
       .then(res => {
         const beerModsMini = res.data;
@@ -153,7 +153,12 @@ class App extends Component {
 
           {this.state.beerMods.map(beerMod =>
             <div key={beerMod.id} className="modal">
-              <img src={beerMod.image_url} alt={beerMod.name}/>
+              <button onClick={this.closeModal}>X</button>
+              <ProgressiveImage
+                preview={bglImg}
+                src={beerMod.image_url}
+                render={(src, style) => <img src={src} style={style} alt={beerMod.name}/>}
+              />
               <div className="details">
                 <p className="name">{beerMod.name}</p>
                 <p className="tagline">{beerMod.tagline}</p>
@@ -180,7 +185,7 @@ class App extends Component {
           )}
           </div>
           
-          {/*<button onClick={this.closeModal}>close</button>  //We will need this on mobile */}
+          {/*  End of Modal */}
         </Modal>  
       </div>
     );
