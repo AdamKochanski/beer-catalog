@@ -56,6 +56,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // for tests in App.test.js
+    if (process.env.NODE_ENV === 'test') return
 
     // initial modal
     let initModal = window.location.pathname.split( '/' )[2];

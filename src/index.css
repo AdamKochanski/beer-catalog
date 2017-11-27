@@ -63,7 +63,7 @@ body {
 
 .modal {
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1fr;
   max-width: 500px;
   color: #737373;
 }
@@ -140,6 +140,14 @@ body {
   font-weight: bold;
 }
 
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+  .modal {
+    grid-template-columns: 1fr 3fr;
+  }
+}
+
+/* Small Devices, Tablets */
 @media only screen and (min-width: 768px) {
   .wrapper {
     grid-template-columns: repeat(2, 1fr);
@@ -153,6 +161,7 @@ body {
   }
 }
 
+/* Large Devices, Wide Screens */
 @media only screen and (min-width: 1200px) {
     .wrapper {
       grid-template-columns: repeat(4, 1fr);
