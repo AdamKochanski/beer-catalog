@@ -1,4 +1,4 @@
-#Beer catalog
+# Beer catalog
 
 ## Available Scripts
 
